@@ -36,8 +36,12 @@ LOCAL_SRC_FILES := \
     RenderEngine/Texture.cpp \
     RenderEngine/GLES10RenderEngine.cpp \
     RenderEngine/GLES11RenderEngine.cpp \
-    RenderEngine/GLES20RenderEngine.cpp \
-    DisplayUtils.cpp
+    RenderEngine/GLES20RenderEngine.cpp\
+    DisplayUtils.cpp \
+    ExSurfaceFlinger/ExLayer.cpp \
+    ExSurfaceFlinger/ExSurfaceFlinger.cpp \
+    ExSurfaceFlinger/ExVirtualDisplaySurface.cpp \
+    ExSurfaceFlinger/ExHWComposer.cpp
 
 LOCAL_C_INCLUDES := \
 	frameworks/native/vulkan/include \
@@ -156,14 +160,12 @@ ifeq ($(TARGET_USES_QCOM_BSP), true)
     LOCAL_C_INCLUDES += $(call project-path-for,qcom-display)/libgralloc
     LOCAL_C_INCLUDES += $(call project-path-for,qcom-display)/libqdutils
   endif
-  LOCAL_SHARED_LIBRARIES += libqdutils
-  LOCAL_SHARED_LIBRARIES += libqdMetaData
-  LOCAL_CFLAGS += -DQTI_BSP
-  LOCAL_SRC_FILES += \
-    ExSurfaceFlinger/ExLayer.cpp \
-    ExSurfaceFlinger/ExSurfaceFlinger.cpp \
-    ExSurfaceFlinger/ExVirtualDisplaySurface.cpp \
-    ExSurfaceFlinger/ExHWComposer.cpp
+    LOCAL_SHARED_LIBRARIES += libqdutils
+    LOCAL_SHARED_LIBRARIES += libqdMetaData
+    LOCAL_CFLAGS += -DQTI_BSP
+  ifeq ($(call is-board-platform-in-list, msm8996), true)
+    LOCAL_CFLAGS += -DUSE_COLOR_METADATA
+  endif
 endif
 
 LOCAL_MODULE := libsurfaceflinger
